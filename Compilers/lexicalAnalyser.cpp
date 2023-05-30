@@ -2,15 +2,15 @@
 
 #include "lexicalAnalyser.h"
 
-const char* RESERVERD_WORD[21] = { "program", "type", "integer", "char", "array", "of", "record","begin", "end",  //¹Ø¼ü×ÖÊı×é
+const char* RESERVERD_WORD[21] = { "program", "type", "integer", "char", "array", "of", "record","begin", "end",  //å…³é”®å­—æ•°ç»„
 								"var", "procedure",  "if", "then", "else", "fi", "while", "do", "endwh",
 								"read", "write", "return" };
 
 char tokenString[1000];
 int strLen = 0;
-token* pList = NULL;	//tokenlistÍ·Ö¸Õë
-token* pTail = NULL;	//tokenlistÎ²Ö¸Õë
-int lineCount = 1;	//¼ÇÂ¼µ±Ç°ĞĞÊı
+token* pList = NULL;	//tokenlistå¤´æŒ‡é’ˆ
+token* pTail = NULL;	//tokenlistå°¾æŒ‡é’ˆ
+int lineCount = 1;	//è®°å½•å½“å‰è¡Œæ•°
 
 int inAlphabet(char ch)
 {     
@@ -58,7 +58,7 @@ int isOther(char ch)
 
 void getNextChar()
 {
-	if (curChar >= 0) {	//»º³åÇø¸üĞÂÇÒµ÷ÓÃÁËungetNextÊ±¿ÉÄÜÊ¹curCharÎª-1
+	if (curChar >= 0) {	//ç¼“å†²åŒºæ›´æ–°ä¸”è°ƒç”¨äº†ungetNextæ—¶å¯èƒ½ä½¿curCharä¸º-1
 		tokenString[strLen] = lineBuf[curChar];
 	}
 	++strLen;
@@ -101,26 +101,26 @@ char* lexicalAnalyse()
 
 token* getTokenList()
 {
-	/*´ò¿ªÔ´ÎÄ¼ş*/
+	/*æ‰“å¼€æºæ–‡ä»¶*/
 	infp = fopen(inPath, "r");
 
 	state s = start;
 	lexType lex = errortoken;
 	while (1) {
 		int endIndex = 0;
-		for (int i = 0; i < 256 && !feof(infp); ++i) {	//×¢ÒâfeofÅĞ¶ÏÎªÕæºó»áÔÙ¶ÁÒ»´Î£¬µ«²»»á³É¹¦¶ÁÈ¡
+		for (int i = 0; i < 256 && !feof(infp); ++i) {	//æ³¨æ„feofåˆ¤æ–­ä¸ºçœŸåä¼šå†è¯»ä¸€æ¬¡ï¼Œä½†ä¸ä¼šæˆåŠŸè¯»å–
 			fscanf(infp, "%c", &lineBuf[i]);
 			endIndex = i;
 		}
-		if (feof(infp))	//ÈôÔÚÌîÂú»º³åÇøÇ°ÎÄ¼ş¶ÁÈ¡¾Í½áÊø£¬ĞèÒªÎª»º³åÇøÌí¼ÓÖÕÖ¹·û
+		if (feof(infp))	//è‹¥åœ¨å¡«æ»¡ç¼“å†²åŒºå‰æ–‡ä»¶è¯»å–å°±ç»“æŸï¼Œéœ€è¦ä¸ºç¼“å†²åŒºæ·»åŠ ç»ˆæ­¢ç¬¦
 			lineBuf[endIndex] = '\0';
 		curChar = 0;
 
 		while (curChar != BUFLEN) {
 			char ch = lineBuf[curChar];
-			if (s == incomment || inAlphabet(ch)) {	//×Ö·ûÊôÓÚ×Ö·û±íÖĞ×Ö·û»ò´¦ÓÚ×¢ÊÍ×´Ì¬£¬½øĞĞ´¦Àí  
+			if (s == incomment || inAlphabet(ch)) {	//å­—ç¬¦å±äºå­—ç¬¦è¡¨ä¸­å­—ç¬¦æˆ–å¤„äºæ³¨é‡ŠçŠ¶æ€ï¼Œè¿›è¡Œå¤„ç†  
 				switch (s) {
-					case start:	//¿ªÊ¼×´Ì¬µÄ×´Ì¬×ª»»
+					case start:	//å¼€å§‹çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (getType(ch)) {
 							case letter: s = inid; break;
 							case num: s = innum; break;
@@ -142,7 +142,7 @@ token* getTokenList()
 							case error: s = errorstate; break;
 						}
 						break;
-					case inid:	//±êÊ¶·û×´Ì¬µÄ×´Ì¬×ª»»
+					case inid:	//æ ‡è¯†ç¬¦çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (getType(ch)) {
 							case letter:
 							case num: s = inid; break;
@@ -153,7 +153,7 @@ token* getTokenList()
 								break;
 						}
 						break;
-					case innum:	//Êı×Ö×´Ì¬µÄ×´Ì¬×ª»»
+					case innum:	//æ•°å­—çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (getType(ch)) {
 							case num: s = innum; break;
 							default:
@@ -163,7 +163,7 @@ token* getTokenList()
 								break;
 						}
 						break;
-					case inassign: //¸³Öµ×´Ì¬µÄ×´Ì¬×ª»»
+					case inassign: //èµ‹å€¼çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (ch) {
 							case '=': 
 								s = done; 
@@ -172,7 +172,7 @@ token* getTokenList()
 							default: s = errorstate; break;
 						}
 						break;
-					case incomment:	//×¢ÊÍ×´Ì¬µÄ×´Ì¬×ª»»
+					case incomment:	//æ³¨é‡ŠçŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (ch) {
 							case '}': 
 								s = done; 
@@ -182,7 +182,7 @@ token* getTokenList()
 							default: s = incomment; break;
 						}
 						break;
-					case inrange:	//ÏÂ±ê×´Ì¬µÄ×´Ì¬×ª»»
+					case inrange:	//ä¸‹æ ‡çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (ch) {
 							case '.': 
 								s = done;
@@ -192,10 +192,10 @@ token* getTokenList()
 								s = done;
 								lex = end;
 								ungetNextChar();
-								break;	//³ÌĞò½áÊø±êÖ¾
+								break;	//ç¨‹åºç»“æŸæ ‡å¿—
 						}
 						break;
-					case inchar:	//×Ö·û×´Ì¬µÄ×´Ì¬×ª»»
+					case inchar:	//å­—ç¬¦çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (getType(ch)) {
 							case letter:
 							case num:
@@ -206,7 +206,7 @@ token* getTokenList()
 								break;
 							}
 						break;
-					case endchar:	//×Ö·ûÖÕÖ¹×´Ì¬µÄ×´Ì¬×ª»»
+					case endchar:	//å­—ç¬¦ç»ˆæ­¢çŠ¶æ€çš„çŠ¶æ€è½¬æ¢
 						switch (ch) {
 							case '\'': 
 								s = done;
@@ -219,27 +219,27 @@ token* getTokenList()
 						break;
 				}
 			}
-			else {	//³öÏÖ²»ÔÚ×Ö·û±íÖĞµÄ×Ö·û£¬³ö´í
+			else {	//å‡ºç°ä¸åœ¨å­—ç¬¦è¡¨ä¸­çš„å­—ç¬¦ï¼Œå‡ºé”™
 				s = errorstate;
 			}
 			getNextChar();
 
-			if (s == done) {	//±£´ætoken²¢ÖØÖÃÖÁ¿ªÊ¼×´Ì¬
-				if (lex != comment && lex != blank) {	//×¢ÊÍ²»´¦Àí£¬¿Õ°×²»´¦Àí
+			if (s == done) {	//ä¿å­˜tokenå¹¶é‡ç½®è‡³å¼€å§‹çŠ¶æ€
+				if (lex != comment && lex != blank) {	//æ³¨é‡Šä¸å¤„ç†ï¼Œç©ºç™½ä¸å¤„ç†
 					token* t = (token*)malloc(sizeof(token));
 
 					t->lineshow = lineCount;
 
 					tokenString[strLen] = '\0';
 
-					if (lex == id) {	//ÅĞ¶Ï±êÊ¶·ûÊÇ·ñÊÇ¹Ø¼ü×Ö
+					if (lex == id) {	//åˆ¤æ–­æ ‡è¯†ç¬¦æ˜¯å¦æ˜¯å…³é”®å­—
 						for (int i = 0; i < 21; ++i) {
 							if (strcmp(RESERVERD_WORD[i], tokenString) == 0)
 								lex = reserved;
 						}
 					}
 
-					//¸ù¾İÀàĞÍ½øĞĞlexºÍsemµÄÉú³É
+					//æ ¹æ®ç±»å‹è¿›è¡Œlexå’Œsemçš„ç”Ÿæˆ
 					if (lex == id) {
 						strcpy(t->lex, "id");
 						strcpy(t->sem, tokenString);
@@ -260,9 +260,9 @@ token* getTokenList()
 						strcpy(t->lex, tokenString);
 						strcpy(t->sem, "");
 					}
-					lex = errortoken;	//ÖØÖÃ×´Ì¬Îªerror
+					lex = errortoken;	//é‡ç½®çŠ¶æ€ä¸ºerror
 
-					/*±£´æĞÂÉú³ÉµÄtoken*/
+					/*ä¿å­˜æ–°ç”Ÿæˆçš„token*/
 					if (pList == NULL) {
 						pList = t;
 						pTail = pList;
@@ -275,17 +275,17 @@ token* getTokenList()
 					}
 				}
 
-				/*ÖØÖÃ×´Ì¬ºÍ´Ê·¨·ÖÎö×Ö·û´®³¤¶È*/
+				/*é‡ç½®çŠ¶æ€å’Œè¯æ³•åˆ†æå­—ç¬¦ä¸²é•¿åº¦*/
 				s = start;
 				strLen = 0;
 			}
 			if (s == errorstate) {
-				//´íÎó´¦Àí
+				//é”™è¯¯å¤„ç†
 				fclose(infp);
 				return pList;
 			}
 
-			if (ch == '\0') {	//ÎÄ¼şÎ²£¬´¦Àí½áÊø
+			if (ch == '\0') {	//æ–‡ä»¶å°¾ï¼Œå¤„ç†ç»“æŸ
 				token* t = (token*)malloc(sizeof(token));
 				t->lineshow = lineCount;
 				strcpy(t->lex, "EOF");
@@ -297,7 +297,7 @@ token* getTokenList()
 				return pList;
 			}
 		}//while
-		lineBuf[0] = '\0';	//Ä£ÄâÇå¿Õ»º³åÇø
+		lineBuf[0] = '\0';	//æ¨¡æ‹Ÿæ¸…ç©ºç¼“å†²åŒº
 	}
 }
 
