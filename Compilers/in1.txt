@@ -1,4 +1,4 @@
-{一个SNL程序例子，该程序实现了冒泡排序算法}
+{涓�涓猄NL绋嬪簭渚嬪瓙锛岃绋嬪簭瀹炵幇浜嗗啋娉℃帓搴忕畻娉晑
 program bubble
 var integer i,j,num;
     array [1..20] of integer a;
@@ -39,4 +39,4 @@ begin
         i:=i+1
     endwh
 end.
-{一个SNL程序例子，该程序实现了冒泡排序算法}
+{涓�涓猄NL绋嬪簭渚嬪瓙锛岃绋嬪簭瀹炵幇浜嗗啋娉℃帓搴忕畻娉晑
