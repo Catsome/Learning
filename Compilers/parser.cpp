@@ -3,9 +3,9 @@
 
 #pragma warning(disable : 4996)
 
-TreeNode* pRoot;	//Óï·¨Ê÷¸ù½Úµã
-Token curToken;	//µ±Ç°´¦ÀíµÄToken
-char tmp[50];	//´¢´æĞèÒª±£´æµÄsem
+TreeNode* pRoot;	//è¯­æ³•æ ‘æ ¹èŠ‚ç‚¹
+Token curToken;	//å½“å‰å¤„ç†çš„Token
+char tmp[50];	//å‚¨å­˜éœ€è¦ä¿å­˜çš„sem
 
 void readToken() {
 	if (!feof(listfp)) {
@@ -21,7 +21,7 @@ void readToken() {
 
 int Match(const char* key)
 {
-	if (strcmp(curToken.sem, key) == 0) {	//Æ¥Åä³É¹¦£¬¶ÁÈëÏÂÒ»¸ötoken
+	if (strcmp(curToken.sem, key) == 0) {	//åŒ¹é…æˆåŠŸï¼Œè¯»å…¥ä¸‹ä¸€ä¸ªtoken
 		readToken();
 		strcpy(tmp, curToken.sem);
 		return 1;
@@ -34,7 +34,7 @@ TreeNode* parse() {
 	listfp = fopen(listPath, "r");
 	readToken();
 	pRoot = Program();
-	if (strcmp(curToken.lex, "EOF") != 0) {		//ÎÄ¼şÌáÇ°½áÊø£¬½øÈë´íÎó´¦Àí
+	if (strcmp(curToken.lex, "EOF") != 0) {		//æ–‡ä»¶æå‰ç»“æŸï¼Œè¿›å…¥é”™è¯¯å¤„ç†
 		//error
 	}
 	else {
@@ -652,7 +652,7 @@ TreeNode* Stm()
 		t = InputStm();
 	else if (strcmp(curToken.lex, "write") == 0)		t = OutputStm();
 	else if (Match("id")) {
-		//tmpÎ´Ê¹ÓÃ
+		//tmpæœªä½¿ç”¨
 		t = AssCall();
 	}
 	else {
